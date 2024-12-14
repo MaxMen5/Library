@@ -1,6 +1,7 @@
 package ru.mendeleev.gui;
 
 import org.springframework.stereotype.Component;
+import ru.mendeleev.service.AuthManager;
 import ru.mendeleev.utils.CommonUtils;
 
 import javax.annotation.PostConstruct;
@@ -12,9 +13,10 @@ public final class MainFrame extends JFrame {
 
     private static final String TITLE = "Library";
 
+    private final AuthManager authManager;
 
-    public MainFrame() {
-
+    public MainFrame(AuthManager authManager) {
+        this.authManager = authManager;
     }
 
     @PostConstruct
