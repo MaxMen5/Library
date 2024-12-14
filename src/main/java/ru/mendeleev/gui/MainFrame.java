@@ -1,11 +1,10 @@
-package ru.mendeleev;
+package ru.mendeleev.gui;
 
 import org.springframework.stereotype.Component;
 import ru.mendeleev.utils.CommonUtils;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 
 @Component
