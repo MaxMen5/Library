@@ -19,8 +19,8 @@ import static ru.mendeleev.utils.CommonUtils.isBlank;
 
 public class EditAuthorDialog extends JDialog {
 
-    private static final String TITLEADD = "Добавление игрока";
-    private static final String TITLEEDIT = "Редактирование игрока";
+    private static final String TITLEADD = "Добавление автора";
+    private static final String TITLEEDIT = "Редактирование автора";
 
     private final JComboBox countries = new JComboBox();
     private final JTextField nameField = new JTextField();

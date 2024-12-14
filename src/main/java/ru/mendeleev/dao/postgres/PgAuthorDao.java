@@ -2,22 +2,24 @@ package ru.mendeleev.dao.postgres;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ru.mendeleev.dao.interfaces.AbstractDao;
 import ru.mendeleev.dao.interfaces.IAuthorDao;
 import ru.mendeleev.editClasses.AuthorEdit;
+import ru.mendeleev.editClasses.AuthorFilter;
 import ru.mendeleev.editClasses.FullAuthor;
 import ru.mendeleev.editClasses.SmallAuthor;
 import ru.mendeleev.entity.Author;
 
 import java.util.List;
 
+import static ru.mendeleev.utils.CommonUtils.isBlank;
+
 @Component
 @Lazy
 public class PgAuthorDao extends AbstractDao<Author> implements IAuthorDao {
 
     @Override
-    public List<FullAuthor> findAll() {
+    public List<FullAuthor> findAll(AuthorFilter filter) {
         return query("select " +
                 "a.id as id, " +
                 "a.name as name, " +
@@ -26,6 +28,10 @@ public class PgAuthorDao extends AbstractDao<Author> implements IAuthorDao {
                 "a.birthday_year as birthday_year " +
                 "from author a " +
                 "inner join country c on a.author_country_id = c.id " +
+                "where 1=1 " +
+                (isBlank(filter.getName()) ? "" : "and a.name like '%" + filter.getName() + "%' ") +
+                (isBlank(filter.getCountry()) ? "" : "and c.name like '%" + filter.getCountry() + "%' ") +
+                (isBlank(filter.getYear()) ? "" : "and a.birthday_year = " + filter.getYear() + " ") +
                 "order by a.id", fullRowMapper());
     }
 

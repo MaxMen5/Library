@@ -3,6 +3,7 @@ package ru.mendeleev.dao.interfaces;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mendeleev.editClasses.AuthorEdit;
+import ru.mendeleev.editClasses.AuthorFilter;
 import ru.mendeleev.editClasses.BookEdit;
 import ru.mendeleev.editClasses.FullAuthor;
 import ru.mendeleev.editClasses.SmallAuthor;
@@ -27,7 +28,7 @@ public interface IAuthorDao extends IDao<Author> {
     //================================================================================================================//
 
     @Transactional
-    public List<FullAuthor> findAll();
+    public List<FullAuthor> findAll(AuthorFilter filter);
 
     @Transactional
     public List<SmallAuthor> findSmallAuthors();

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.IAuthorDao;
 import ru.mendeleev.dao.interfaces.ICountryDao;
 import ru.mendeleev.editClasses.AuthorEdit;
+import ru.mendeleev.editClasses.AuthorFilter;
 import ru.mendeleev.editClasses.AuthorLists;
 import ru.mendeleev.editClasses.FullAuthor;
 import ru.mendeleev.entity.Country;
@@ -25,6 +26,10 @@ public class AuthorPanel extends JPanel {
     private final IAuthorDao authorDao;
     private final ICountryDao countryDao;
     private AuthManager authManager;
+
+    private final JTextField filterNameField = new JTextField();
+    private final JTextField filterCountryField = new JTextField();
+    private final JTextField filterYearField = new JTextField();
 
     private JButton addButton;
     private JButton editButton;
@@ -51,6 +56,7 @@ public class AuthorPanel extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
 
         table.removeColumn(table.getColumnModel().getColumn(0));
+        table.removeColumn(table.getColumnModel().getColumn(1));
 
         refreshTableData();
     }
@@ -68,6 +74,16 @@ public class AuthorPanel extends JPanel {
         removeButton = new JButton(new RemoveBookAction());
         removeButton.setEnabled(false);
         toolBar.add(removeButton);
+        toolBar.add(new JLabel("   Имя: "));
+        toolBar.add(filterNameField);
+        filterNameField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JLabel("   Страна: "));
+        toolBar.add(filterCountryField);
+        filterCountryField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JLabel("   Год рождения: "));
+        toolBar.add(filterYearField);
+        filterYearField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JButton(new AuthorPanel.FilterAuthorAction()));
 
         return toolBar;
     }
@@ -77,7 +93,13 @@ public class AuthorPanel extends JPanel {
         addButton.setEnabled(isLoggedIn);
         editButton.setEnabled(isLoggedIn);
         removeButton.setEnabled(isLoggedIn);
-        List<FullAuthor> allAuthors = authorDao.findAll();
+
+        AuthorFilter filter = new AuthorFilter();
+        filter.setName(filterNameField.getText());
+        filter.setCountry(filterCountryField.getText());
+        filter.setYear(filterYearField.getText());
+
+        List<FullAuthor> allAuthors = authorDao.findAll(filter);
         tableModel.initWith(allAuthors);
         table.revalidate();
         table.repaint();

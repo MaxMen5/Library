@@ -3,6 +3,7 @@ package ru.mendeleev.dao.interfaces;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mendeleev.editClasses.BookEdit;
+import ru.mendeleev.editClasses.BookFilter;
 import ru.mendeleev.editClasses.FullBook;
 import ru.mendeleev.entity.Book;
 
@@ -27,7 +28,7 @@ public interface IBookDao extends IDao<Book> {
     //================================================================================================================//
 
     @Transactional
-    public List<FullBook> findAll();
+    public List<FullBook> findAll(BookFilter filter);
 
     @Transactional
     public void deleteBookById(Integer id);

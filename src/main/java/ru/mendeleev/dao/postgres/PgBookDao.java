@@ -5,17 +5,20 @@ import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.AbstractDao;
 import ru.mendeleev.dao.interfaces.IBookDao;
 import ru.mendeleev.editClasses.BookEdit;
+import ru.mendeleev.editClasses.BookFilter;
 import ru.mendeleev.editClasses.FullBook;
 import ru.mendeleev.entity.Book;
 
 import java.util.List;
+
+import static ru.mendeleev.utils.CommonUtils.isBlank;
 
 @Component
 @Lazy
 public class PgBookDao extends AbstractDao<Book> implements IBookDao {
 
     @Override
-    public List<FullBook> findAll() {
+    public List<FullBook> findAll(BookFilter filter) {
         return query("select " +
                 "b.id as id, " +
                 "b.name as name, " +
@@ -28,6 +31,12 @@ public class PgBookDao extends AbstractDao<Book> implements IBookDao {
                 "from book b " +
                 "inner join author a on b.book_author_id = a.id " +
                 "inner join genre g on b.book_genre_id = g.id " +
+                "where 1=1 " +
+                (isBlank(filter.getName()) ? "" : "and b.name like '%" + filter.getName() + "%' ") +
+                (isBlank(filter.getAuthor()) ? "" : "and a.name like '%" + filter.getAuthor() + "%' ") +
+                (isBlank(filter.getYear()) ? "" : "and b.year = " + filter.getYear() + " ") +
+                (isBlank(filter.getGenre()) ? "" : "and g.name like '%" + filter.getGenre() + "%' ") +
+                (isBlank(filter.getPage()) ? "" : "and b.page_count = " + filter.getPage() + " ") +
                 "order by b.id", fullRowMapper());
     }
 

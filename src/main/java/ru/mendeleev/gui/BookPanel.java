@@ -5,6 +5,7 @@ import ru.mendeleev.dao.interfaces.IAuthorDao;
 import ru.mendeleev.dao.interfaces.IBookDao;
 import ru.mendeleev.dao.interfaces.IGenreDao;
 import ru.mendeleev.editClasses.BookEdit;
+import ru.mendeleev.editClasses.BookFilter;
 import ru.mendeleev.editClasses.BookLists;
 import ru.mendeleev.editClasses.FullBook;
 import ru.mendeleev.editClasses.SmallAuthor;
@@ -27,6 +28,12 @@ public class BookPanel extends JPanel {
     private final IAuthorDao authorDao;
     private final IGenreDao genreDao;
     private final IBookDao bookDao;
+
+    private final JTextField filterNameField = new JTextField();
+    private final JTextField filterAuthorField = new JTextField();
+    private final JTextField filterYearField = new JTextField();
+    private final JTextField filterGenreField = new JTextField();
+    private final JTextField filterPagesField = new JTextField();
 
     private AuthManager authManager;
     private JButton addButton;
@@ -58,6 +65,8 @@ public class BookPanel extends JPanel {
         add(centerPanel, BorderLayout.CENTER);
 
         table.removeColumn(table.getColumnModel().getColumn(0));
+        table.removeColumn(table.getColumnModel().getColumn(1));
+        table.removeColumn(table.getColumnModel().getColumn(3));
 
         refreshTableData();
     }
@@ -76,6 +85,23 @@ public class BookPanel extends JPanel {
         removeButton.setEnabled(false);
         toolBar.add(removeButton);
 
+        toolBar.add(new JLabel("   Название: "));
+        toolBar.add(filterNameField);
+        filterNameField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JLabel("   Автор: "));
+        toolBar.add(filterAuthorField);
+        filterAuthorField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JLabel("   Год выхода: "));
+        toolBar.add(filterYearField);
+        filterYearField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JLabel("   Жанр: "));
+        toolBar.add(filterGenreField);
+        filterGenreField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JLabel("   Кол-во страниц: "));
+        toolBar.add(filterPagesField);
+        filterPagesField.setPreferredSize(new Dimension(100, 25));
+        toolBar.add(new JButton(new FilterBookAction()));
+
         return toolBar;
     }
 
@@ -84,7 +110,15 @@ public class BookPanel extends JPanel {
         addButton.setEnabled(isLoggedIn);
         editButton.setEnabled(isLoggedIn);
         removeButton.setEnabled(isLoggedIn);
-        List<FullBook> allBooks = bookDao.findAll();
+
+        BookFilter bookFilter = new BookFilter();
+        bookFilter.setName(filterNameField.getText());
+        bookFilter.setAuthor(filterAuthorField.getText());
+        bookFilter.setYear(filterYearField.getText());
+        bookFilter.setGenre(filterGenreField.getText());
+        bookFilter.setPage(filterPagesField.getText());
+
+        List<FullBook> allBooks = bookDao.findAll(bookFilter);
         tableModel.initWith(allBooks);
         table.revalidate();
         table.repaint();
