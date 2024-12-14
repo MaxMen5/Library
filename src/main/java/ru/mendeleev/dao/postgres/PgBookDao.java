@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.AbstractDao;
 import ru.mendeleev.dao.interfaces.IBookDao;
+import ru.mendeleev.editClasses.BookEdit;
 import ru.mendeleev.editClasses.FullBook;
 import ru.mendeleev.entity.Book;
 
@@ -32,12 +33,26 @@ public class PgBookDao extends AbstractDao<Book> implements IBookDao {
 
     @Override
     public void deleteBookById(Integer id) {
-        query("delete from book where id = " + id);
+        update("delete from book where id = " + id);
     }
 
     @Override
-    public void saveBook(Book book) {
-        update("insert into book(");
+    public void saveBook(BookEdit book) {
+        update("insert into book (name, book_author_id, year, book_genre_id, page_count) values ('" +
+                book.getName() + "', '" +
+                book.getAuthor().getId() + "', " +
+                book.getYear() + ", '" +
+                book.getGenre().getId() + "', " +
+                book.getPages() + ");");
     }
 
+    @Override
+    public void update(Integer id, BookEdit book) {
+        update("update book set name = '" + book.getName() + "', " +
+                "book_author_id = " + book.getAuthor().getId() +
+                ", year = " + book.getYear() +
+                ", book_genre_id = " + book.getGenre().getId() +
+                ", page_count = " + book.getPages() +
+                " where id = " + id);
+    }
 }

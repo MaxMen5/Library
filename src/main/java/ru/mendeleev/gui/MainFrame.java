@@ -16,10 +16,13 @@ public final class MainFrame extends JFrame {
 
     private final AuthManager authManager;
     private final BookPanel bookPanel;
+    private final LogInDialog logInDialog;
 
-    public MainFrame(AuthManager authManager, BookPanel bookPanel) {
+
+    public MainFrame(AuthManager authManager, BookPanel bookPanel, LogInDialog logInDialog) {
         this.authManager = authManager;
         this.bookPanel = bookPanel;
+        this.logInDialog = logInDialog;
     }
 
     @PostConstruct
@@ -45,8 +48,35 @@ public final class MainFrame extends JFrame {
     }
 
     private void createGUI() {
-// TODO
+        setJMenuBar(createMenuBar());
         getContentPane().add(createTabbedPane(), BorderLayout.CENTER);
+    }
+
+    private JMenuBar createMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JButton authorization = new JButton("Войти");
+        menuBar.add(authorization);
+
+        authorization.addActionListener(e -> {
+            if (!authManager.isLoggedIn()) {
+                logInDialog.setLocationRelativeTo(MainFrame.this);
+                logInDialog.setVisible(true);
+                if (authManager.isLoggedIn()) authorization.setText("Выйти");
+            } else {
+                if (JOptionPane.showConfirmDialog(
+                        MainFrame.this,
+                        "Вы действительно хотите выйти?",
+                        "Вопрос",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                    authManager.setLoggedIn(false);
+                    bookPanel.refreshTableData();
+                    authorization.setText("Войти");
+                }
+            }
+        });
+
+        return menuBar;
     }
 
     private JTabbedPane createTabbedPane() {

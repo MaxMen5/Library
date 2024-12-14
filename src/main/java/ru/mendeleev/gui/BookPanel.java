@@ -80,6 +80,10 @@ public class BookPanel extends JPanel {
     }
 
     public void refreshTableData() {
+        boolean isLoggedIn = authManager.isLoggedIn();
+        addButton.setEnabled(isLoggedIn);
+        editButton.setEnabled(isLoggedIn);
+        removeButton.setEnabled(isLoggedIn);
         List<FullBook> allBooks = bookDao.findAll();
         tableModel.initWith(allBooks);
         table.revalidate();
@@ -94,8 +98,8 @@ public class BookPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            EditBookDialog editBookDialog = new EditBookDialog(bookLists, newLeagueName -> {
-                //bookDao.save(newLeagueName);
+            EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit -> {
+                bookDao.saveBook(bookEdit);
                 refreshTableData();
             });
             editBookDialog.setLocationRelativeTo(BookPanel.this);
@@ -142,7 +146,7 @@ public class BookPanel extends JPanel {
             bookEdit.setPages((Integer) tableModel.getValueAt(selectedRowIndex, 7));
 
             EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit, changedBook -> {
-                //bookDao.update(selectedBookId, changedBook);
+                bookDao.update(selectedBookId, changedBook);
                 refreshTableData();
             });
             editBookDialog.setLocationRelativeTo(BookPanel.this);
