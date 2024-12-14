@@ -21,6 +21,7 @@ public interface IAuthorDao extends IDao<Author> {
             author.setName(resultSet.getString("name"));
             author.setCountryId(resultSet.getInt("author_country_id"));
             author.setBirthYear(resultSet.getInt("birthday_year"));
+            author.setBookList(resultSet.getString("book_list"));
             return author;
         };
     }
@@ -59,6 +60,7 @@ public interface IAuthorDao extends IDao<Author> {
             author.setCountryId(resultSet.getInt("author_country_id"));
             author.setCountryName(resultSet.getString("author_country_name"));
             author.setBirthYear(resultSet.getInt("birthday_year"));
+            author.setBookList(resultSet.getString("book_list"));
             return author;
         };
     }

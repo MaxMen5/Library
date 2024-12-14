@@ -14,4 +14,5 @@ import java.util.List;
 @ToString
 public class AuthorLists {
     private List<Country> country;
+    private List<FullBook> book;
 }

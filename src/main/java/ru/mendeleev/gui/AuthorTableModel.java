@@ -11,10 +11,10 @@ import java.util.List;
 public class AuthorTableModel extends AbstractTableModel {
 
     private static final List<String> COLUMNS = Arrays.asList(
-            "id", "Имя", "Id страны", "Страна", "Год рождения"
+            "id", "Имя", "Id страны", "Страна", "Год рождения", "Список книг"
     );
     private static final List<Class<?>> TYPES = Arrays.asList(
-            Integer.class, String.class, Integer.class, String.class, Integer.class
+            Integer.class, String.class, Integer.class, String.class, Integer.class, String.class
     );
 
     private List<FullAuthor> data;
@@ -30,7 +30,7 @@ public class AuthorTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 6;
     }
 
     @Override
@@ -53,6 +53,7 @@ public class AuthorTableModel extends AbstractTableModel {
             case 2: return author.getCountryId();
             case 3: return author.getCountryName();
             case 4: return author.getBirthYear();
+            case 5: return author.getBookList();
             default: return null;
         }
     }

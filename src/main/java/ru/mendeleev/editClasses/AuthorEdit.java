@@ -4,8 +4,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.mendeleev.entity.Book;
 import ru.mendeleev.entity.Country;
-import ru.mendeleev.entity.Genre;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +17,5 @@ public class AuthorEdit {
     private String name;
     private Country country;
     private Integer year;
+    private List<Book> book;
 }

@@ -25,7 +25,8 @@ public class PgAuthorDao extends AbstractDao<Author> implements IAuthorDao {
                 "a.name as name, " +
                 "a.author_country_id as author_country_id, " +
                 "c.name as author_country_name, " +
-                "a.birthday_year as birthday_year " +
+                "a.birthday_year as birthday_year, " +
+                "array_to_string(array(select b.name from book b where b.book_author_id = a.id order by b.name), ', ')  as book_list " +
                 "from author a " +
                 "inner join country c on a.author_country_id = c.id " +
                 "where 1=1 " +

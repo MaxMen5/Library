@@ -31,6 +31,12 @@ public interface IBookDao extends IDao<Book> {
     public List<FullBook> findAll(BookFilter filter);
 
     @Transactional
+    public List<FullBook> findAll();
+
+    @Transactional
+    public List<FullBook> findNotAllBooks(Integer id);
+
+    @Transactional
     public void deleteBookById(Integer id);
 
     @Transactional
@@ -38,6 +44,7 @@ public interface IBookDao extends IDao<Book> {
 
     @Transactional
     public void update(Integer Id, BookEdit book);
+
 
     default RowMapper<FullBook> fullRowMapper() {
         return (resultSet, i) -> {

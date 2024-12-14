@@ -15,4 +15,5 @@ public class FullAuthor {
     private Integer countryId;
     private String countryName;
     private Integer birthYear;
+    private String bookList;
 }

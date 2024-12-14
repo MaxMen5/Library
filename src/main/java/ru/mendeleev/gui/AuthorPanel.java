@@ -2,10 +2,12 @@ package ru.mendeleev.gui;
 
 import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.IAuthorDao;
+import ru.mendeleev.dao.interfaces.IBookDao;
 import ru.mendeleev.dao.interfaces.ICountryDao;
 import ru.mendeleev.editClasses.AuthorEdit;
 import ru.mendeleev.editClasses.AuthorFilter;
 import ru.mendeleev.editClasses.AuthorLists;
+import ru.mendeleev.editClasses.BookFilter;
 import ru.mendeleev.editClasses.FullAuthor;
 import ru.mendeleev.entity.Country;
 import ru.mendeleev.service.AuthManager;
@@ -25,6 +27,7 @@ public class AuthorPanel extends JPanel {
 
     private final IAuthorDao authorDao;
     private final ICountryDao countryDao;
+    private  final IBookDao bookDao;
     private AuthManager authManager;
 
     private final JTextField filterNameField = new JTextField();
@@ -35,11 +38,11 @@ public class AuthorPanel extends JPanel {
     private JButton editButton;
     private JButton removeButton;
 
-    public AuthorPanel(AuthManager authManager, IAuthorDao authorDao, ICountryDao countryDao) {
+    public AuthorPanel(AuthManager authManager, IAuthorDao authorDao, ICountryDao countryDao, IBookDao bookDao) {
         this.authManager = authManager;
         this.authorDao = authorDao;
         this.countryDao = countryDao;
-        authorList.setCountry(countryDao.findAll());
+        this.bookDao = bookDao;
         createGUI();
     }
 
@@ -113,6 +116,10 @@ public class AuthorPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            authorList.setCountry(countryDao.findAll());
+            authorList.setBook(bookDao.findAll());
+
             EditAuthorDialog editauthorDialog = new EditAuthorDialog(authorList, authorEdit -> {
                 authorDao.saveAuthor(authorEdit);
                 refreshTableData();
@@ -152,6 +159,10 @@ public class AuthorPanel extends JPanel {
 
             authorEdit.setCountry(country);
             authorEdit.setYear((Integer) tableModel.getValueAt(selectedRowIndex, 4));
+
+
+            authorList.setCountry(countryDao.findAll());
+            authorList.setBook(bookDao.findNotAllBooks(selectedAuthorId));
 
             EditAuthorDialog editAuthorDialog = new EditAuthorDialog(authorList, authorEdit, changedAuthor -> {
                 authorDao.update(selectedAuthorId, changedAuthor);

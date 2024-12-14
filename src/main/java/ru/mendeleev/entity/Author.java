@@ -14,4 +14,5 @@ public class Author implements IEntity {
     private String name;
     private Integer countryId;
     private Integer birthYear;
+    private String bookList;
 }
