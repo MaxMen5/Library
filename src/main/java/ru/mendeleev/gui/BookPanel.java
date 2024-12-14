@@ -1,5 +1,6 @@
 package ru.mendeleev.gui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.IAuthorDao;
 import ru.mendeleev.dao.interfaces.IBookDao;
@@ -24,6 +25,9 @@ public class BookPanel extends JPanel {
     private final JTable table = new JTable(tableModel);
 
     BookLists bookLists = new BookLists();
+
+    @Autowired
+    private AuthorPanel authorPanel;
 
     private final IAuthorDao authorDao;
     private final IGenreDao genreDao;
@@ -135,6 +139,7 @@ public class BookPanel extends JPanel {
             EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit -> {
                 bookDao.saveBook(bookEdit);
                 refreshTableData();
+                authorPanel.refreshTableData();
             });
             editBookDialog.setLocationRelativeTo(BookPanel.this);
             editBookDialog.setVisible(true);
@@ -182,6 +187,7 @@ public class BookPanel extends JPanel {
             EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit, changedBook -> {
                 bookDao.update(selectedBookId, changedBook);
                 refreshTableData();
+                authorPanel.refreshTableData();
             });
             editBookDialog.setLocationRelativeTo(BookPanel.this);
             editBookDialog.setVisible(true);
@@ -218,6 +224,7 @@ public class BookPanel extends JPanel {
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 bookDao.deleteBookById(selectedBookId);
                 refreshTableData();
+                authorPanel.refreshTableData();
             }
         }
     }

@@ -1,5 +1,6 @@
 package ru.mendeleev.gui;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.IAuthorDao;
 import ru.mendeleev.dao.interfaces.IBookDao;
@@ -15,13 +16,17 @@ import ru.mendeleev.service.AuthManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 @Component
 public class AuthorPanel extends JPanel {
 
     private final AuthorTableModel tableModel = new AuthorTableModel();
-    private final JTable table = new JTable(tableModel);
+    private final JTable table = createTable();
+
+    @Autowired
+    private BookPanel bookPanel;
 
     private AuthorLists authorList = new AuthorLists();
 
@@ -62,6 +67,30 @@ public class AuthorPanel extends JPanel {
         table.removeColumn(table.getColumnModel().getColumn(1));
 
         refreshTableData();
+    }
+
+    private JTable createTable() {
+        JTable table = new JTable(tableModel) {
+            @Override
+            public String getToolTipText(MouseEvent e) {
+                Point p = e.getPoint();
+                int row = rowAtPoint(p);
+                int column = columnAtPoint(p);
+
+                Object value = getValueAt(row, column);
+                if (value == null) {
+                    return null;
+                }
+
+                String strValue = value.toString();
+                if (!strValue.isEmpty()) {
+                    return "<html>" + strValue.replaceAll(",", "<br>") + "</html>";
+                }
+
+                return (String) value;
+            }
+        };
+        return table;
     }
 
     private JToolBar createBookToolBar() {
@@ -123,6 +152,7 @@ public class AuthorPanel extends JPanel {
             EditAuthorDialog editauthorDialog = new EditAuthorDialog(authorList, authorEdit -> {
                 authorDao.saveAuthor(authorEdit);
                 refreshTableData();
+                bookPanel.refreshTableData();
             });
             editauthorDialog.setLocationRelativeTo(AuthorPanel.this);
             editauthorDialog.setVisible(true);
@@ -159,7 +189,7 @@ public class AuthorPanel extends JPanel {
 
             authorEdit.setCountry(country);
             authorEdit.setYear((Integer) tableModel.getValueAt(selectedRowIndex, 4));
-
+            authorEdit.setBook(bookDao.findAuthorBooks(selectedAuthorId));
 
             authorList.setCountry(countryDao.findAll());
             authorList.setBook(bookDao.findNotAllBooks(selectedAuthorId));
@@ -167,6 +197,7 @@ public class AuthorPanel extends JPanel {
             EditAuthorDialog editAuthorDialog = new EditAuthorDialog(authorList, authorEdit, changedAuthor -> {
                 authorDao.update(selectedAuthorId, changedAuthor);
                 refreshTableData();
+                bookPanel.refreshTableData();
             });
             editAuthorDialog.setLocationRelativeTo(AuthorPanel.this);
             editAuthorDialog.setVisible(true);
@@ -203,6 +234,7 @@ public class AuthorPanel extends JPanel {
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 authorDao.deleteAuthorById(selectedAuthorId);
                 refreshTableData();
+                bookPanel.refreshTableData();
             }
         }
     }

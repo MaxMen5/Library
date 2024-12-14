@@ -85,7 +85,7 @@ public class EditBookDialog extends JDialog {
         mainPanel.add(new JButton(new EditBookDialog.SaveAction()));
 
         getContentPane().add(mainPanel);
-        setSize(400, 270);
+        setSize(400, 230);
         setModal(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

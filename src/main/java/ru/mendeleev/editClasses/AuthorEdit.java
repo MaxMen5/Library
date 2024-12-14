@@ -17,5 +17,5 @@ public class AuthorEdit {
     private String name;
     private Country country;
     private Integer year;
-    private List<Book> book;
+    private List<FullBook> book;
 }

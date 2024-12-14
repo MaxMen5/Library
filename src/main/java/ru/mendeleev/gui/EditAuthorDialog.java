@@ -8,10 +8,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
+import ru.mendeleev.editClasses.FullBook;
 import ru.mendeleev.editClasses.SmallAuthor;
 import ru.mendeleev.entity.Country;
 import ru.mendeleev.entity.Genre;
 import ru.mendeleev.utils.CommonUtils;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 import static ru.mendeleev.utils.CommonUtils.isBlank;
@@ -25,6 +29,9 @@ public class EditAuthorDialog extends JDialog {
     private final JComboBox countries = new JComboBox();
     private final JTextField nameField = new JTextField();
     private final JTextField yearField = new JTextField();
+
+    private JList<FullBook> authorBookList = createBookList();
+    private JList<FullBook> allBookList = createBookList();
 
     private final AuthorLists authorList;
     private final AuthorEdit prevData;
@@ -46,11 +53,32 @@ public class EditAuthorDialog extends JDialog {
             countries.addItem(authorList.getCountry().get(i).getName());
         }
 
-        JPanel mainPanel = new JPanel(new GridLayout(4, 1));
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        JPanel northPanel = new JPanel(new GridLayout(3, 1));
 
         JPanel namePanel = new JPanel(new BorderLayout());
         JPanel countryPanel = new JPanel(new BorderLayout());
         JPanel yearPanel = new JPanel(new BorderLayout());
+
+        JPanel listPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+
+        listPanel.add(new JScrollPane(allBookList));
+        listPanel.add(new JScrollPane(authorBookList));
+
+        DefaultListModel<FullBook> authorBookModel = new DefaultListModel<>();
+        if (prevData != null) {
+            for (FullBook book : prevData.getBook()) {
+                authorBookModel.addElement(book);
+            }
+        }
+        authorBookList.setModel(authorBookModel);
+
+        DefaultListModel<FullBook> allBookModel = new DefaultListModel<>();
+        for (FullBook book : authorList.getBook()) {
+            allBookModel.addElement(book);
+        }
+        allBookList.setModel(allBookModel);
 
         namePanel.add(new JLabel("Имя:"), BorderLayout.WEST);
         countryPanel.add(new JLabel("Автор:"), BorderLayout.WEST);
@@ -66,16 +94,66 @@ public class EditAuthorDialog extends JDialog {
         countryPanel.add(countries, BorderLayout.CENTER);
         yearPanel.add(yearField, BorderLayout.CENTER);
 
-        mainPanel.add(namePanel);
-        mainPanel.add(countryPanel);
-        mainPanel.add(yearPanel);
-        mainPanel.add(new JButton(new EditAuthorDialog.SaveAction()));
+        northPanel.add(namePanel);
+        northPanel.add(countryPanel);
+        northPanel.add(yearPanel);
+
+        mainPanel.add(northPanel, BorderLayout.NORTH);
+        mainPanel.add(listPanel, BorderLayout.CENTER);
+        mainPanel.add(new JButton(new EditAuthorDialog.SaveAction()), BorderLayout.SOUTH);
 
         getContentPane().add(mainPanel);
-        setSize(400, 270);
+        setSize(400, 500);
         setModal(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        allBookList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+                    FullBook selectedValue = allBookList.getSelectedValue();
+                    ((DefaultListModel<FullBook>) allBookList.getModel()).removeElement(selectedValue);
+                    ((DefaultListModel<FullBook>) authorBookList.getModel()).addElement(selectedValue);
+                    allBookList.revalidate();
+                    allBookList.repaint();
+                    authorBookList.revalidate();
+                    authorBookList.repaint();
+                }
+            }
+        });
+
+        authorBookList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
+                    FullBook selectedValue = authorBookList.getSelectedValue();
+                    ((DefaultListModel<FullBook>) authorBookList.getModel()).removeElement(selectedValue);
+                    ((DefaultListModel<FullBook>) allBookList.getModel()).addElement(selectedValue);
+                    allBookList.revalidate();
+                    allBookList.repaint();
+                    authorBookList.revalidate();
+                    authorBookList.repaint();
+                }
+            }
+        });
+    }
+
+    private JList<FullBook> createBookList() {
+        JList<FullBook> bookList = new JList<>();
+        bookList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component renderer = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (renderer instanceof JLabel && value instanceof FullBook) {
+                    JLabel label = (JLabel) renderer;
+                    FullBook book = (FullBook) value;
+                    label.setText(book.getName());
+                }
+                return renderer;
+            }
+        });
+        return bookList;
     }
 
     private class SaveAction extends AbstractAction {

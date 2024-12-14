@@ -45,6 +45,9 @@ public interface IBookDao extends IDao<Book> {
     @Transactional
     public void update(Integer Id, BookEdit book);
 
+    @Transactional
+    public List<FullBook> findAuthorBooks(Integer id);
+
 
     default RowMapper<FullBook> fullRowMapper() {
         return (resultSet, i) -> {
