@@ -228,11 +228,12 @@ public class AuthorPanel extends JPanel {
 
             if (JOptionPane.showConfirmDialog(
                     AuthorPanel.this,
-                    "Удалить автора '" + selectedAuthorName + "'?",
+                    "Удалить автора '" + selectedAuthorName + "'? Все его книги будут также удалены!",
                     "Вопрос",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                 authorDao.deleteAuthorById(selectedAuthorId);
+                bookDao.deleteAuthorBooks(selectedAuthorId);
                 refreshTableData();
                 bookPanel.refreshTableData();
             }

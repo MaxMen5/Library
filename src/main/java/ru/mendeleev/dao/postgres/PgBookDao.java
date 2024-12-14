@@ -116,4 +116,9 @@ public class PgBookDao extends AbstractDao<Book> implements IBookDao {
                 "where b.book_author_id = " + id +
                 "order by b.id", fullRowMapper());
     }
+
+    @Override
+    public void deleteAuthorBooks(Integer id) {
+        update("delete from book where book_author_id = " + id);
+    }
 }

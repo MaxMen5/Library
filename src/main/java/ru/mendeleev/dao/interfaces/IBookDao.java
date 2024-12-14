@@ -48,6 +48,8 @@ public interface IBookDao extends IDao<Book> {
     @Transactional
     public List<FullBook> findAuthorBooks(Integer id);
 
+    @Transactional
+    public void deleteAuthorBooks(Integer id);
 
     default RowMapper<FullBook> fullRowMapper() {
         return (resultSet, i) -> {
