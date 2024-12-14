@@ -16,13 +16,15 @@ public final class MainFrame extends JFrame {
 
     private final AuthManager authManager;
     private final BookPanel bookPanel;
+    private final AuthorPanel authorPanel;
     private final LogInDialog logInDialog;
 
 
-    public MainFrame(AuthManager authManager, BookPanel bookPanel, LogInDialog logInDialog) {
+    public MainFrame(AuthManager authManager, BookPanel bookPanel, LogInDialog logInDialog, AuthorPanel authorPanel) {
         this.authManager = authManager;
         this.bookPanel = bookPanel;
         this.logInDialog = logInDialog;
+        this.authorPanel = authorPanel;
     }
 
     @PostConstruct
@@ -70,6 +72,7 @@ public final class MainFrame extends JFrame {
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                     authManager.setLoggedIn(false);
+                    authorPanel.refreshTableData();
                     bookPanel.refreshTableData();
                     authorization.setText("Войти");
                 }
@@ -83,6 +86,7 @@ public final class MainFrame extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tabbedPane.addTab("Игроки", bookPanel);
+        tabbedPane.addTab("Игроки", authorPanel);
 
         tabbedPane.setSelectedIndex(0);
 

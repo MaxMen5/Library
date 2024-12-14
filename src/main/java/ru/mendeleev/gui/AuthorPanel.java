@@ -2,13 +2,11 @@ package ru.mendeleev.gui;
 
 import org.springframework.stereotype.Component;
 import ru.mendeleev.dao.interfaces.IAuthorDao;
-import ru.mendeleev.dao.interfaces.IBookDao;
-import ru.mendeleev.dao.interfaces.IGenreDao;
-import ru.mendeleev.editClasses.BookEdit;
-import ru.mendeleev.editClasses.BookLists;
-import ru.mendeleev.editClasses.FullBook;
-import ru.mendeleev.editClasses.SmallAuthor;
-import ru.mendeleev.entity.Genre;
+import ru.mendeleev.dao.interfaces.ICountryDao;
+import ru.mendeleev.editClasses.AuthorEdit;
+import ru.mendeleev.editClasses.AuthorLists;
+import ru.mendeleev.editClasses.FullAuthor;
+import ru.mendeleev.entity.Country;
 import ru.mendeleev.service.AuthManager;
 
 import javax.swing.*;
@@ -17,31 +15,26 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 @Component
-public class BookPanel extends JPanel {
+public class AuthorPanel extends JPanel {
 
-    private final BookTableModel tableModel = new BookTableModel();
+    private final AuthorTableModel tableModel = new AuthorTableModel();
     private final JTable table = new JTable(tableModel);
 
-    BookLists bookLists = new BookLists();
+    private AuthorLists authorList = new AuthorLists();
 
     private final IAuthorDao authorDao;
-    private final IGenreDao genreDao;
-    private final IBookDao bookDao;
-
+    private final ICountryDao countryDao;
     private AuthManager authManager;
+
     private JButton addButton;
     private JButton editButton;
     private JButton removeButton;
 
-    public BookPanel(IBookDao bookDao, AuthManager authManager, IAuthorDao authorDao, IGenreDao genreDao) {
-        this.bookDao = bookDao;
+    public AuthorPanel(AuthManager authManager, IAuthorDao authorDao, ICountryDao countryDao) {
         this.authManager = authManager;
         this.authorDao = authorDao;
-        this.genreDao = genreDao;
-
-        bookLists.setAuthors(authorDao.findSmallAuthors());
-        bookLists.setGenres(genreDao.findAll());
-
+        this.countryDao = countryDao;
+        authorList.setCountry(countryDao.findAll());
         createGUI();
     }
 
@@ -84,32 +77,32 @@ public class BookPanel extends JPanel {
         addButton.setEnabled(isLoggedIn);
         editButton.setEnabled(isLoggedIn);
         removeButton.setEnabled(isLoggedIn);
-        List<FullBook> allBooks = bookDao.findAll();
-        tableModel.initWith(allBooks);
+        List<FullAuthor> allAuthors = authorDao.findAll();
+        tableModel.initWith(allAuthors);
         table.revalidate();
         table.repaint();
     }
 
     private class AddBookAction extends AbstractAction {
         AddBookAction() {
-            putValue(SHORT_DESCRIPTION, "Добавить книгу");
+            putValue(SHORT_DESCRIPTION, "Добавить автора");
             putValue(SMALL_ICON, new ImageIcon(getClass().getResource("/icons/action_add.gif")));
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit -> {
-                bookDao.saveBook(bookEdit);
+            EditAuthorDialog editauthorDialog = new EditAuthorDialog(authorList, authorEdit -> {
+                authorDao.saveAuthor(authorEdit);
                 refreshTableData();
             });
-            editBookDialog.setLocationRelativeTo(BookPanel.this);
-            editBookDialog.setVisible(true);
+            editauthorDialog.setLocationRelativeTo(AuthorPanel.this);
+            editauthorDialog.setVisible(true);
         }
     }
 
     private class EditBookAction extends AbstractAction {
         EditBookAction() {
-            putValue(SHORT_DESCRIPTION, "Изменить книгу");
+            putValue(SHORT_DESCRIPTION, "Изменить автора");
             putValue(SMALL_ICON, new ImageIcon(getClass().getResource("/icons/action_edit.gif")));
         }
 
@@ -119,44 +112,37 @@ public class BookPanel extends JPanel {
             int rowCount = tableModel.getRowCount();
             if (selectedRowIndex == -1 || selectedRowIndex >= rowCount) {
                 JOptionPane.showMessageDialog(
-                        BookPanel.this,
-                        "Для редпктирования выберите книгу!",
+                        AuthorPanel.this,
+                        "Для редпктирования выберите автора!",
                         "Внимание",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            Integer selectedBookId = (Integer) tableModel.getValueAt(selectedRowIndex, 0);
+            Integer selectedAuthorId = (Integer) tableModel.getValueAt(selectedRowIndex, 0);
 
-            BookEdit bookEdit = new BookEdit();
-            bookEdit.setName((String) tableModel.getValueAt(selectedRowIndex, 1));
+            AuthorEdit authorEdit = new AuthorEdit();
+            authorEdit.setName((String) tableModel.getValueAt(selectedRowIndex, 1));
 
-            SmallAuthor author = new SmallAuthor();
-            author.setId((Integer) tableModel.getValueAt(selectedRowIndex, 2));
-            author.setName((String) tableModel.getValueAt(selectedRowIndex, 3));
+            Country country = new Country();
+            country.setId((Integer) tableModel.getValueAt(selectedRowIndex, 2));
+            country.setName((String) tableModel.getValueAt(selectedRowIndex, 3));
 
-            bookEdit.setAuthor(author);
-            bookEdit.setYear((Integer) tableModel.getValueAt(selectedRowIndex, 4));
+            authorEdit.setCountry(country);
+            authorEdit.setYear((Integer) tableModel.getValueAt(selectedRowIndex, 4));
 
-            Genre genre = new Genre();
-            genre.setId((Integer) tableModel.getValueAt(selectedRowIndex, 5));
-            genre.setName((String) tableModel.getValueAt(selectedRowIndex, 6));
-
-            bookEdit.setGenre(genre);
-            bookEdit.setPages((Integer) tableModel.getValueAt(selectedRowIndex, 7));
-
-            EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit, changedBook -> {
-                bookDao.update(selectedBookId, changedBook);
+            EditAuthorDialog editAuthorDialog = new EditAuthorDialog(authorList, authorEdit, changedAuthor -> {
+                authorDao.update(selectedAuthorId, changedAuthor);
                 refreshTableData();
             });
-            editBookDialog.setLocationRelativeTo(BookPanel.this);
-            editBookDialog.setVisible(true);
+            editAuthorDialog.setLocationRelativeTo(AuthorPanel.this);
+            editAuthorDialog.setVisible(true);
         }
     }
 
     private class RemoveBookAction extends AbstractAction {
         RemoveBookAction() {
-            putValue(SHORT_DESCRIPTION, "Удалить книгу");
+            putValue(SHORT_DESCRIPTION, "Удалить автора");
             putValue(SMALL_ICON, new ImageIcon(getClass().getResource("/icons/action_remove.gif")));
         }
 
@@ -166,31 +152,31 @@ public class BookPanel extends JPanel {
             int rowCount = tableModel.getRowCount();
             if (selectedRowIndex == -1 || selectedRowIndex >= rowCount) {
                 JOptionPane.showMessageDialog(
-                        BookPanel.this,
-                        "Для удаления выберите книгу!",
+                        AuthorPanel.this,
+                        "Для удаления выберите автора!",
                         "Внимание",
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            Integer selectedBookId = (Integer) tableModel.getValueAt(selectedRowIndex, 0);
-            String selectedBookName = (String) tableModel.getValueAt(selectedRowIndex, 1);
+            Integer selectedAuthorId = (Integer) tableModel.getValueAt(selectedRowIndex, 0);
+            String selectedAuthorName = (String) tableModel.getValueAt(selectedRowIndex, 1);
 
             if (JOptionPane.showConfirmDialog(
-                    BookPanel.this,
-                    "Удалить книгу '" + selectedBookName + "'?",
+                    AuthorPanel.this,
+                    "Удалить автора '" + selectedAuthorName + "'?",
                     "Вопрос",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                bookDao.deleteBookById(selectedBookId);
+                authorDao.deleteAuthorById(selectedAuthorId);
                 refreshTableData();
             }
         }
     }
 
-    private class FilterBookAction extends AbstractAction {
-        FilterBookAction() {
-            putValue(SHORT_DESCRIPTION, "Фильтровать книги");
+    private class FilterAuthorAction extends AbstractAction {
+        FilterAuthorAction() {
+            putValue(SHORT_DESCRIPTION, "Фильтровать авторов");
             putValue(SMALL_ICON, new ImageIcon(getClass().getResource("/icons/action_refresh.gif")));
         }
 

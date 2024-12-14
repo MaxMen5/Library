@@ -15,6 +15,8 @@ public class LogInDialog extends JDialog {
     private AuthManager authManager;
     @Autowired
     private BookPanel bookPanel;
+    @Autowired
+    private AuthorPanel authorPanel;
 
     private static final String TITLE = "Авторизация";
 
@@ -57,6 +59,7 @@ public class LogInDialog extends JDialog {
 
             if (loginField.getText().equals("1") && passwordField.getText().equals("1")) {
                 authManager.setLoggedIn(true);
+                authorPanel.refreshTableData();
                 bookPanel.refreshTableData();
                 dispose();
             }

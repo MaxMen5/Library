@@ -57,7 +57,7 @@ public class EditBookDialog extends JDialog {
         JPanel genrePanel = new JPanel(new BorderLayout());
         JPanel pagePanel = new JPanel(new BorderLayout());
 
-        namePanel.add(new JLabel("Имя:"), BorderLayout.WEST);
+        namePanel.add(new JLabel("Название:"), BorderLayout.WEST);
         authorPanel.add(new JLabel("Автор:"), BorderLayout.WEST);
         yearPanel.add(new JLabel("Год выхода:"), BorderLayout.WEST);
         genrePanel.add(new JLabel("Жанр:"), BorderLayout.WEST);
