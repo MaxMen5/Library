@@ -6,6 +6,7 @@ import ru.mendeleev.utils.CommonUtils;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 
 @Component
@@ -14,9 +15,11 @@ public final class MainFrame extends JFrame {
     private static final String TITLE = "Library";
 
     private final AuthManager authManager;
+    private final BookPanel bookPanel;
 
-    public MainFrame(AuthManager authManager) {
+    public MainFrame(AuthManager authManager, BookPanel bookPanel) {
         this.authManager = authManager;
+        this.bookPanel = bookPanel;
     }
 
     @PostConstruct
@@ -42,7 +45,18 @@ public final class MainFrame extends JFrame {
     }
 
     private void createGUI() {
+// TODO
+        getContentPane().add(createTabbedPane(), BorderLayout.CENTER);
+    }
 
+    private JTabbedPane createTabbedPane() {
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        tabbedPane.addTab("Игроки", bookPanel);
+
+        tabbedPane.setSelectedIndex(0);
+
+        return tabbedPane;
     }
 
 }
