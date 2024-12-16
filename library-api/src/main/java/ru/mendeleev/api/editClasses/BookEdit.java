@@ -4,8 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.mendeleev.entity.Author;
-import ru.mendeleev.entity.Genre;
+import ru.mendeleev.api.entity.Genre;
 
 import java.util.List;
 

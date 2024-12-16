@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import ru.mendeleev.entity.IEntity;
+import ru.mendeleev.api.entity.IEntity;
 
 @Getter
 @Setter
