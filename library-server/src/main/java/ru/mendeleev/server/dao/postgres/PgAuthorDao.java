@@ -4,15 +4,15 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.mendeleev.server.dao.interfaces.AbstractDao;
 import ru.mendeleev.server.dao.interfaces.IAuthorDao;
-import ru.mendeleev.editClasses.AuthorEdit;
-import ru.mendeleev.editClasses.AuthorFilter;
-import ru.mendeleev.editClasses.FullAuthor;
-import ru.mendeleev.editClasses.SmallAuthor;
-import ru.mendeleev.entity.Author;
+import ru.mendeleev.api.editClasses.AuthorEdit;
+import ru.mendeleev.api.editClasses.AuthorFilter;
+import ru.mendeleev.api.editClasses.FullAuthor;
+import ru.mendeleev.api.editClasses.SmallAuthor;
+import ru.mendeleev.api.entity.Author;
 
 import java.util.List;
 
-import static ru.mendeleev.utils.CommonUtils.isBlank;
+import static ru.mendeleev.server.utils.ServerUtils.isBlank;
 
 @Component
 @Lazy

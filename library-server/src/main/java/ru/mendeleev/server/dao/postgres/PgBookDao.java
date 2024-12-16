@@ -2,16 +2,16 @@ package ru.mendeleev.server.dao.postgres;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import ru.mendeleev.api.editClasses.BookEdit;
+import ru.mendeleev.api.editClasses.BookFilter;
+import ru.mendeleev.api.editClasses.FullBook;
+import ru.mendeleev.api.entity.Book;
 import ru.mendeleev.server.dao.interfaces.AbstractDao;
 import ru.mendeleev.server.dao.interfaces.IBookDao;
-import ru.mendeleev.editClasses.BookEdit;
-import ru.mendeleev.editClasses.BookFilter;
-import ru.mendeleev.editClasses.FullBook;
-import ru.mendeleev.entity.Book;
 
 import java.util.List;
 
-import static ru.mendeleev.utils.CommonUtils.isBlank;
+import static ru.mendeleev.server.utils.ServerUtils.isBlank;
 
 @Component
 @Lazy
@@ -56,6 +56,7 @@ public class PgBookDao extends AbstractDao<Book> implements IBookDao {
                 "inner join genre g on b.book_genre_id = g.id " +
                 "order by b.id", fullRowMapper());
     }
+
     @Override
     public List<FullBook> findNotAllBooks(Integer id) {
         return query("select " +

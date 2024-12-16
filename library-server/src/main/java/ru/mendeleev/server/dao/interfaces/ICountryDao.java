@@ -2,7 +2,7 @@ package ru.mendeleev.server.dao.interfaces;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mendeleev.entity.Country;
+import ru.mendeleev.api.entity.Country;
 
 import java.util.List;
 
@@ -21,5 +21,5 @@ public interface ICountryDao extends IDao<Country> {
     //================================================================================================================//
 
     @Transactional
-    public List<Country> findAll();
+    List<Country> findAll();
 }

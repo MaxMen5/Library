@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import ru.mendeleev.server.dao.interfaces.AbstractDao;
 import ru.mendeleev.server.dao.interfaces.IGenreDao;
-import ru.mendeleev.entity.Genre;
+import ru.mendeleev.api.entity.Genre;
 
 import java.util.List;
 

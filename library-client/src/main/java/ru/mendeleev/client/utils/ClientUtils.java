@@ -5,11 +5,11 @@ import java.awt.*;
 /**
  * Класс статических утилитных методов.
  */
-public final class CommonUtils {
+public final class ClientUtils {
 
     private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
-    private CommonUtils() {
+    private ClientUtils() {
     }
 
     /**

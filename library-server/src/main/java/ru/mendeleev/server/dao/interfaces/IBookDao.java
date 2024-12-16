@@ -2,10 +2,10 @@ package ru.mendeleev.server.dao.interfaces;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mendeleev.editClasses.BookEdit;
-import ru.mendeleev.editClasses.BookFilter;
-import ru.mendeleev.editClasses.FullBook;
-import ru.mendeleev.entity.Book;
+import ru.mendeleev.api.editClasses.BookEdit;
+import ru.mendeleev.api.editClasses.BookFilter;
+import ru.mendeleev.api.editClasses.FullBook;
+import ru.mendeleev.api.entity.Book;
 
 import java.util.List;
 
@@ -28,28 +28,28 @@ public interface IBookDao extends IDao<Book> {
     //================================================================================================================//
 
     @Transactional
-    public List<FullBook> findAll(BookFilter filter);
+    List<FullBook> findAll(BookFilter filter);
 
     @Transactional
-    public List<FullBook> findAll();
+    List<FullBook> findAll();
 
     @Transactional
-    public List<FullBook> findNotAllBooks(Integer id);
+    List<FullBook> findNotAllBooks(Integer id);
 
     @Transactional
-    public void deleteBookById(Integer id);
+    void deleteBookById(Integer id);
 
     @Transactional
-    public void saveBook(BookEdit book);
+    void saveBook(BookEdit book);
 
     @Transactional
-    public void update(Integer Id, BookEdit book);
+    void update(Integer Id, BookEdit book);
 
     @Transactional
-    public List<FullBook> findAuthorBooks(Integer id);
+    List<FullBook> findAuthorBooks(Integer id);
 
     @Transactional
-    public void deleteAuthorBooks(Integer id);
+    void deleteAuthorBooks(Integer id);
 
     default RowMapper<FullBook> fullRowMapper() {
         return (resultSet, i) -> {

@@ -2,12 +2,11 @@ package ru.mendeleev.server.dao.interfaces;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mendeleev.editClasses.AuthorEdit;
-import ru.mendeleev.editClasses.AuthorFilter;
-import ru.mendeleev.editClasses.BookEdit;
-import ru.mendeleev.editClasses.FullAuthor;
-import ru.mendeleev.editClasses.SmallAuthor;
-import ru.mendeleev.entity.Author;
+import ru.mendeleev.api.editClasses.AuthorEdit;
+import ru.mendeleev.api.editClasses.AuthorFilter;
+import ru.mendeleev.api.editClasses.FullAuthor;
+import ru.mendeleev.api.editClasses.SmallAuthor;
+import ru.mendeleev.api.entity.Author;
 
 import java.util.List;
 
@@ -29,19 +28,19 @@ public interface IAuthorDao extends IDao<Author> {
     //================================================================================================================//
 
     @Transactional
-    public List<FullAuthor> findAll(AuthorFilter filter);
+    List<FullAuthor> findAll(AuthorFilter filter);
 
     @Transactional
-    public List<SmallAuthor> findSmallAuthors();
+    List<SmallAuthor> findSmallAuthors();
 
     @Transactional
-    public void deleteAuthorById(Integer id);
+    void deleteAuthorById(Integer id);
 
     @Transactional
-    public void saveAuthor(AuthorEdit author);
+    void saveAuthor(AuthorEdit author);
 
     @Transactional
-    public void update(Integer Id, AuthorEdit author);
+    void update(Integer Id, AuthorEdit author);
 
     default RowMapper<SmallAuthor> smallRowMapper() {
         return (resultSet, i) -> {

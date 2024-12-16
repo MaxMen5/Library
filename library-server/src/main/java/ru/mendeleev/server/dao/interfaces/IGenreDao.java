@@ -2,7 +2,7 @@ package ru.mendeleev.server.dao.interfaces;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mendeleev.entity.Genre;
+import ru.mendeleev.api.entity.Genre;
 
 import java.util.List;
 
@@ -21,5 +21,5 @@ public interface IGenreDao extends IDao<Genre> {
     //================================================================================================================//
 
     @Transactional
-    public List<Genre> findAll();
+    List<Genre> findAll();
 }
