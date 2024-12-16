@@ -1,19 +1,17 @@
 package ru.mendeleev.client.gui;
 
-import ru.mendeleev.editClasses.BookEdit;
-import ru.mendeleev.editClasses.BookLists;
+import ru.mendeleev.api.editClasses.BookEdit;
+import ru.mendeleev.api.editClasses.BookLists;
+import ru.mendeleev.api.editClasses.SmallAuthor;
+import ru.mendeleev.api.entity.Genre;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import ru.mendeleev.editClasses.SmallAuthor;
-import ru.mendeleev.entity.Genre;
-import ru.mendeleev.utils.CommonUtils;
 import java.util.function.Consumer;
 
-import static ru.mendeleev.utils.CommonUtils.isBlank;
-
+import static ru.mendeleev.client.utils.ClientUtils.isBlank;
+import static ru.mendeleev.client.utils.ClientUtils.toStringSafe;
 
 public class EditBookDialog extends JDialog {
 
@@ -39,8 +37,9 @@ public class EditBookDialog extends JDialog {
         this.bookList = bookList;
         this.prevData = prevData;
 
-        if (prevData != null) {setTitle(TITLEEDIT);}
-        else setTitle(TITLEADD);
+        if (prevData != null) {
+            setTitle(TITLEEDIT);
+        } else setTitle(TITLEADD);
 
         for (int i = 0; i < bookList.getAuthors().size(); i++) {
             authors.addItem(bookList.getAuthors().get(i).getName());
@@ -66,9 +65,9 @@ public class EditBookDialog extends JDialog {
         if (prevData != null) {
             nameField.setText(prevData.getName());
             authors.setSelectedItem(prevData.getAuthor().getName());
-            yearField.setText(CommonUtils.toStringSafe(prevData.getYear()));
+            yearField.setText(toStringSafe(prevData.getYear()));
             genres.setSelectedItem(prevData.getGenre().getName());
-            pageField.setText(CommonUtils.toStringSafe(prevData.getPages()));
+            pageField.setText(toStringSafe(prevData.getPages()));
         }
 
         namePanel.add(nameField, BorderLayout.CENTER);

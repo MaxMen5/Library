@@ -2,7 +2,7 @@ package ru.mendeleev.client.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.mendeleev.service.AuthManager;
+import ru.mendeleev.client.servcie.LibraryServerService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.awt.event.ActionEvent;
 public class LogInDialog extends JDialog {
 
     @Autowired
-    private AuthManager authManager;
+    private LibraryServerService libraryServerService;
     @Autowired
     private BookPanel bookPanel;
     @Autowired
@@ -56,9 +56,8 @@ public class LogInDialog extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            if (loginField.getText().equals("1") && passwordField.getText().equals("1")) {
-                authManager.setLoggedIn(true);
+            boolean success = libraryServerService.login(loginField.getText(), passwordField.getText());
+            if (success) {
                 authorPanel.refreshTableData();
                 bookPanel.refreshTableData();
                 dispose();

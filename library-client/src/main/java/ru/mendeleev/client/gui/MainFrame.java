@@ -1,27 +1,28 @@
 package ru.mendeleev.client.gui;
 
 import org.springframework.stereotype.Component;
-import ru.mendeleev.service.AuthManager;
-import ru.mendeleev.utils.CommonUtils;
+import ru.mendeleev.client.servcie.LibraryServerService;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 
+import static ru.mendeleev.client.utils.ClientUtils.prepareWindowSizeWithShifts;
+
 @Component
 public final class MainFrame extends JFrame {
 
     private static final String TITLE = "Library";
 
-    private final AuthManager authManager;
+    private final LibraryServerService libraryServerService;
     private final BookPanel bookPanel;
     private final AuthorPanel authorPanel;
     private final LogInDialog logInDialog;
 
 
-    public MainFrame(AuthManager authManager, BookPanel bookPanel, LogInDialog logInDialog, AuthorPanel authorPanel) {
-        this.authManager = authManager;
+    public MainFrame(LibraryServerService libraryServerService, BookPanel bookPanel, LogInDialog logInDialog, AuthorPanel authorPanel) {
+        this.libraryServerService = libraryServerService;
         this.bookPanel = bookPanel;
         this.logInDialog = logInDialog;
         this.authorPanel = authorPanel;
@@ -45,7 +46,7 @@ public final class MainFrame extends JFrame {
             }
         });
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        setSize(CommonUtils.prepareWindowSizeWithShifts(0, 40));
+        setSize(prepareWindowSizeWithShifts(0, 40));
         setVisible(true);
     }
 
@@ -60,10 +61,10 @@ public final class MainFrame extends JFrame {
         menuBar.add(authorization);
 
         authorization.addActionListener(e -> {
-            if (!authManager.isLoggedIn()) {
+            if (!libraryServerService.isLoggedIn()) {
                 logInDialog.setLocationRelativeTo(MainFrame.this);
                 logInDialog.setVisible(true);
-                if (authManager.isLoggedIn()) authorization.setText("Выйти");
+                if (libraryServerService.isLoggedIn()) authorization.setText("Выйти");
             } else {
                 if (JOptionPane.showConfirmDialog(
                         MainFrame.this,
@@ -71,7 +72,7 @@ public final class MainFrame extends JFrame {
                         "Вопрос",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                    authManager.setLoggedIn(false);
+                    libraryServerService.logout();
                     authorPanel.refreshTableData();
                     bookPanel.refreshTableData();
                     authorization.setText("Войти");

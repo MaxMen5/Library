@@ -1,8 +1,6 @@
 package ru.mendeleev.client.gui;
 
-import ru.mendeleev.editClasses.FullAuthor;
-import ru.mendeleev.editClasses.FullBook;
-import ru.mendeleev.entity.Book;
+import ru.mendeleev.api.editClasses.FullAuthor;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Arrays;

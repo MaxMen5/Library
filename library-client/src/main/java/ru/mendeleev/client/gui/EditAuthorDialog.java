@@ -1,25 +1,19 @@
 package ru.mendeleev.client.gui;
 
-import ru.mendeleev.editClasses.AuthorEdit;
-import ru.mendeleev.editClasses.AuthorLists;
-import ru.mendeleev.editClasses.BookEdit;
+import ru.mendeleev.api.editClasses.AuthorEdit;
+import ru.mendeleev.api.editClasses.AuthorLists;
+import ru.mendeleev.api.editClasses.FullBook;
+import ru.mendeleev.api.entity.Country;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import ru.mendeleev.editClasses.FullBook;
-import ru.mendeleev.editClasses.SmallAuthor;
-import ru.mendeleev.entity.Country;
-import ru.mendeleev.entity.Genre;
-import ru.mendeleev.utils.CommonUtils;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
-import static ru.mendeleev.utils.CommonUtils.isBlank;
-
+import static ru.mendeleev.client.utils.ClientUtils.isBlank;
+import static ru.mendeleev.client.utils.ClientUtils.toStringSafe;
 
 public class EditAuthorDialog extends JDialog {
 
@@ -46,8 +40,9 @@ public class EditAuthorDialog extends JDialog {
         this.authorList = authorList;
         this.prevData = prevData;
 
-        if (prevData != null) {setTitle(TITLEEDIT);}
-        else setTitle(TITLEADD);
+        if (prevData != null) {
+            setTitle(TITLEEDIT);
+        } else setTitle(TITLEADD);
 
         for (int i = 0; i < authorList.getCountry().size(); i++) {
             countries.addItem(authorList.getCountry().get(i).getName());
@@ -87,7 +82,7 @@ public class EditAuthorDialog extends JDialog {
         if (prevData != null) {
             nameField.setText(prevData.getName());
             countries.setSelectedItem(prevData.getCountry().getName());
-            yearField.setText(CommonUtils.toStringSafe(prevData.getYear()));
+            yearField.setText(toStringSafe(prevData.getYear()));
         }
 
         namePanel.add(nameField, BorderLayout.CENTER);

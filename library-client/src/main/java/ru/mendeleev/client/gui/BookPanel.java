@@ -2,16 +2,13 @@ package ru.mendeleev.client.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.mendeleev.dao.interfaces.IAuthorDao;
-import ru.mendeleev.dao.interfaces.IBookDao;
-import ru.mendeleev.dao.interfaces.IGenreDao;
-import ru.mendeleev.editClasses.BookEdit;
-import ru.mendeleev.editClasses.BookFilter;
-import ru.mendeleev.editClasses.BookLists;
-import ru.mendeleev.editClasses.FullBook;
-import ru.mendeleev.editClasses.SmallAuthor;
-import ru.mendeleev.entity.Genre;
-import ru.mendeleev.service.AuthManager;
+import ru.mendeleev.api.editClasses.BookEdit;
+import ru.mendeleev.api.editClasses.BookFilter;
+import ru.mendeleev.api.editClasses.BookLists;
+import ru.mendeleev.api.editClasses.FullBook;
+import ru.mendeleev.api.editClasses.SmallAuthor;
+import ru.mendeleev.api.entity.Genre;
+import ru.mendeleev.client.servcie.LibraryServerService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,9 +26,7 @@ public class BookPanel extends JPanel {
     @Autowired
     private AuthorPanel authorPanel;
 
-    private final IAuthorDao authorDao;
-    private final IGenreDao genreDao;
-    private final IBookDao bookDao;
+    private final LibraryServerService libraryServerService;
 
     private final JTextField filterNameField = new JTextField();
     private final JTextField filterAuthorField = new JTextField();
@@ -39,19 +34,15 @@ public class BookPanel extends JPanel {
     private final JTextField filterGenreField = new JTextField();
     private final JTextField filterPagesField = new JTextField();
 
-    private AuthManager authManager;
     private JButton addButton;
     private JButton editButton;
     private JButton removeButton;
 
-    public BookPanel(IBookDao bookDao, AuthManager authManager, IAuthorDao authorDao, IGenreDao genreDao) {
-        this.bookDao = bookDao;
-        this.authManager = authManager;
-        this.authorDao = authorDao;
-        this.genreDao = genreDao;
+    public BookPanel(LibraryServerService libraryServerService) {
+        this.libraryServerService = libraryServerService;
 
-        bookLists.setAuthors(authorDao.findSmallAuthors());
-        bookLists.setGenres(genreDao.findAll());
+        bookLists.setAuthors(libraryServerService.loadSmallAuthors());
+        bookLists.setGenres(libraryServerService.loadAllGenres());
 
         createGUI();
     }
@@ -110,7 +101,7 @@ public class BookPanel extends JPanel {
     }
 
     public void refreshTableData() {
-        boolean isLoggedIn = authManager.isLoggedIn();
+        boolean isLoggedIn = libraryServerService.isLoggedIn();
         addButton.setEnabled(isLoggedIn);
         editButton.setEnabled(isLoggedIn);
         removeButton.setEnabled(isLoggedIn);
@@ -122,7 +113,7 @@ public class BookPanel extends JPanel {
         bookFilter.setGenre(filterGenreField.getText());
         bookFilter.setPage(filterPagesField.getText());
 
-        List<FullBook> allBooks = bookDao.findAll(bookFilter);
+        List<FullBook> allBooks = libraryServerService.loadAllBooks(bookFilter);
         tableModel.initWith(allBooks);
         table.revalidate();
         table.repaint();
@@ -137,7 +128,7 @@ public class BookPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit -> {
-                bookDao.saveBook(bookEdit);
+                libraryServerService.saveBook(bookEdit);
                 refreshTableData();
                 authorPanel.refreshTableData();
             });
@@ -185,7 +176,7 @@ public class BookPanel extends JPanel {
             bookEdit.setPages((Integer) tableModel.getValueAt(selectedRowIndex, 7));
 
             EditBookDialog editBookDialog = new EditBookDialog(bookLists, bookEdit, changedBook -> {
-                bookDao.update(selectedBookId, changedBook);
+                libraryServerService.updateBook(selectedBookId, changedBook);
                 refreshTableData();
                 authorPanel.refreshTableData();
             });
@@ -222,7 +213,7 @@ public class BookPanel extends JPanel {
                     "Вопрос",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                bookDao.deleteBookById(selectedBookId);
+                libraryServerService.deleteBookById(selectedBookId);
                 refreshTableData();
                 authorPanel.refreshTableData();
             }

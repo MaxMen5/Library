@@ -2,16 +2,12 @@ package ru.mendeleev.client.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.mendeleev.dao.interfaces.IAuthorDao;
-import ru.mendeleev.dao.interfaces.IBookDao;
-import ru.mendeleev.dao.interfaces.ICountryDao;
-import ru.mendeleev.editClasses.AuthorEdit;
-import ru.mendeleev.editClasses.AuthorFilter;
-import ru.mendeleev.editClasses.AuthorLists;
-import ru.mendeleev.editClasses.BookFilter;
-import ru.mendeleev.editClasses.FullAuthor;
-import ru.mendeleev.entity.Country;
-import ru.mendeleev.service.AuthManager;
+import ru.mendeleev.api.editClasses.AuthorEdit;
+import ru.mendeleev.api.editClasses.AuthorFilter;
+import ru.mendeleev.api.editClasses.AuthorLists;
+import ru.mendeleev.api.editClasses.FullAuthor;
+import ru.mendeleev.api.entity.Country;
+import ru.mendeleev.client.servcie.LibraryServerService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,10 +26,7 @@ public class AuthorPanel extends JPanel {
 
     private AuthorLists authorList = new AuthorLists();
 
-    private final IAuthorDao authorDao;
-    private final ICountryDao countryDao;
-    private  final IBookDao bookDao;
-    private AuthManager authManager;
+    private final LibraryServerService libraryServerService;
 
     private final JTextField filterNameField = new JTextField();
     private final JTextField filterCountryField = new JTextField();
@@ -43,11 +36,8 @@ public class AuthorPanel extends JPanel {
     private JButton editButton;
     private JButton removeButton;
 
-    public AuthorPanel(AuthManager authManager, IAuthorDao authorDao, ICountryDao countryDao, IBookDao bookDao) {
-        this.authManager = authManager;
-        this.authorDao = authorDao;
-        this.countryDao = countryDao;
-        this.bookDao = bookDao;
+    public AuthorPanel(LibraryServerService libraryServerService) {
+        this.libraryServerService = libraryServerService;
         createGUI();
     }
 
@@ -121,7 +111,7 @@ public class AuthorPanel extends JPanel {
     }
 
     public void refreshTableData() {
-        boolean isLoggedIn = authManager.isLoggedIn();
+        boolean isLoggedIn = libraryServerService.isLoggedIn();
         addButton.setEnabled(isLoggedIn);
         editButton.setEnabled(isLoggedIn);
         removeButton.setEnabled(isLoggedIn);
@@ -131,7 +121,7 @@ public class AuthorPanel extends JPanel {
         filter.setCountry(filterCountryField.getText());
         filter.setYear(filterYearField.getText());
 
-        List<FullAuthor> allAuthors = authorDao.findAll(filter);
+        List<FullAuthor> allAuthors = libraryServerService.loadAllAuthors(filter);
         tableModel.initWith(allAuthors);
         table.revalidate();
         table.repaint();
@@ -146,11 +136,11 @@ public class AuthorPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            authorList.setCountry(countryDao.findAll());
-            authorList.setBook(bookDao.findAll());
+            authorList.setCountry(libraryServerService.loadAllCountries());
+            authorList.setBook(libraryServerService.loadAllBooks());
 
             EditAuthorDialog editauthorDialog = new EditAuthorDialog(authorList, authorEdit -> {
-                authorDao.saveAuthor(authorEdit);
+                libraryServerService.saveAuthor(authorEdit);
                 refreshTableData();
                 bookPanel.refreshTableData();
             });
@@ -189,13 +179,13 @@ public class AuthorPanel extends JPanel {
 
             authorEdit.setCountry(country);
             authorEdit.setYear((Integer) tableModel.getValueAt(selectedRowIndex, 4));
-            authorEdit.setBook(bookDao.findAuthorBooks(selectedAuthorId));
+            authorEdit.setBook(libraryServerService.loadAuthorBooks(selectedAuthorId));
 
-            authorList.setCountry(countryDao.findAll());
-            authorList.setBook(bookDao.findNotAllBooks(selectedAuthorId));
+            authorList.setCountry(libraryServerService.loadAllCountries());
+            authorList.setBook(libraryServerService.loadNotAllBooks(selectedAuthorId));
 
             EditAuthorDialog editAuthorDialog = new EditAuthorDialog(authorList, authorEdit, changedAuthor -> {
-                authorDao.update(selectedAuthorId, changedAuthor);
+                libraryServerService.updateAuthor(selectedAuthorId, changedAuthor);
                 refreshTableData();
                 bookPanel.refreshTableData();
             });
@@ -232,8 +222,8 @@ public class AuthorPanel extends JPanel {
                     "Вопрос",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-                authorDao.deleteAuthorById(selectedAuthorId);
-                bookDao.deleteAuthorBooks(selectedAuthorId);
+                libraryServerService.deleteAuthorById(selectedAuthorId);
+                libraryServerService.deleteAuthorBooks(selectedAuthorId);
                 refreshTableData();
                 bookPanel.refreshTableData();
             }
