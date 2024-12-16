@@ -11,8 +11,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.remoting.rmi.RmiServiceExporter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import ru.mendeleev.api.servcie.LibraryServerService;
 
 import javax.sql.DataSource;
 
@@ -38,6 +40,9 @@ public class ServerApp {
     @Value("#{ environment['jdbc.validation.query'] }")
     private String databaseValidationQuery;
 
+    @Value("#{ environment['port'] }")
+    private int serverPort;
+
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
@@ -62,6 +67,18 @@ public class ServerApp {
     @Bean
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource());
+    }
+
+    @Bean
+    public RmiServiceExporter libraryServerServiceExporter(LibraryServerService libraryServerService) {
+        RmiServiceExporter serviceExporter = new RmiServiceExporter();
+
+        serviceExporter.setServiceName("library");
+        serviceExporter.setService(libraryServerService);
+        serviceExporter.setServiceInterface(LibraryServerService.class);
+        serviceExporter.setRegistryPort(serverPort);
+
+        return serviceExporter;
     }
 
     public static void main(String[] args) {

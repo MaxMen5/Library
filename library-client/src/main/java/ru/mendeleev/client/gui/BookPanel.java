@@ -8,8 +8,9 @@ import ru.mendeleev.api.editClasses.BookLists;
 import ru.mendeleev.api.editClasses.FullBook;
 import ru.mendeleev.api.editClasses.SmallAuthor;
 import ru.mendeleev.api.entity.Genre;
-import ru.mendeleev.client.servcie.LibraryServerService;
+import ru.mendeleev.api.servcie.LibraryServerService;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,12 +22,12 @@ public class BookPanel extends JPanel {
     private final BookTableModel tableModel = new BookTableModel();
     private final JTable table = new JTable(tableModel);
 
-    BookLists bookLists = new BookLists();
+    private final BookLists bookLists = new BookLists();
 
     @Autowired
     private AuthorPanel authorPanel;
-
-    private final LibraryServerService libraryServerService;
+    @Autowired
+    private LibraryServerService libraryServerService;
 
     private final JTextField filterNameField = new JTextField();
     private final JTextField filterAuthorField = new JTextField();
@@ -38,9 +39,8 @@ public class BookPanel extends JPanel {
     private JButton editButton;
     private JButton removeButton;
 
-    public BookPanel(LibraryServerService libraryServerService) {
-        this.libraryServerService = libraryServerService;
-
+    @PostConstruct
+    public void init() {
         bookLists.setAuthors(libraryServerService.loadSmallAuthors());
         bookLists.setGenres(libraryServerService.loadAllGenres());
 

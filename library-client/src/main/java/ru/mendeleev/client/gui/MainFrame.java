@@ -1,7 +1,7 @@
 package ru.mendeleev.client.gui;
 
 import org.springframework.stereotype.Component;
-import ru.mendeleev.client.servcie.LibraryServerService;
+import ru.mendeleev.api.servcie.LibraryServerService;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;

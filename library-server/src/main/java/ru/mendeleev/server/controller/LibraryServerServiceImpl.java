@@ -1,4 +1,4 @@
-package ru.mendeleev.client.servcie;
+package ru.mendeleev.server.controller;
 
 import org.springframework.stereotype.Component;
 import ru.mendeleev.api.editClasses.AuthorEdit;
@@ -10,6 +10,7 @@ import ru.mendeleev.api.editClasses.FullBook;
 import ru.mendeleev.api.editClasses.SmallAuthor;
 import ru.mendeleev.api.entity.Country;
 import ru.mendeleev.api.entity.Genre;
+import ru.mendeleev.api.servcie.LibraryServerService;
 
 import java.util.Collections;
 import java.util.List;

@@ -7,8 +7,9 @@ import ru.mendeleev.api.editClasses.AuthorFilter;
 import ru.mendeleev.api.editClasses.AuthorLists;
 import ru.mendeleev.api.editClasses.FullAuthor;
 import ru.mendeleev.api.entity.Country;
-import ru.mendeleev.client.servcie.LibraryServerService;
+import ru.mendeleev.api.servcie.LibraryServerService;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,10 +24,10 @@ public class AuthorPanel extends JPanel {
 
     @Autowired
     private BookPanel bookPanel;
+    @Autowired
+    private LibraryServerService libraryServerService;
 
     private AuthorLists authorList = new AuthorLists();
-
-    private final LibraryServerService libraryServerService;
 
     private final JTextField filterNameField = new JTextField();
     private final JTextField filterCountryField = new JTextField();
@@ -36,12 +37,12 @@ public class AuthorPanel extends JPanel {
     private JButton editButton;
     private JButton removeButton;
 
-    public AuthorPanel(LibraryServerService libraryServerService) {
-        this.libraryServerService = libraryServerService;
-        createGUI();
-    }
+//    public AuthorPanel() {
+//        createGUI();
+//    }
 
-    private void createGUI() {
+    @PostConstruct
+    public void createGUI() {
         setLayout(new BorderLayout());
 
         JPanel northPanel = new JPanel(new BorderLayout());

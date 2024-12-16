@@ -6,11 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.mendeleev.api.entity.IEntity;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-public class FullBook implements IEntity {
+public class FullBook implements Serializable {
     private Integer id;
     private String name;
     private Integer authorId;

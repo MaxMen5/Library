@@ -6,13 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.mendeleev.api.entity.Genre;
 
-import java.util.List;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @EqualsAndHashCode
 @ToString
-public class BookEdit {
+public class BookEdit implements Serializable {
     private String name;
     private SmallAuthor author;
     private Integer year;

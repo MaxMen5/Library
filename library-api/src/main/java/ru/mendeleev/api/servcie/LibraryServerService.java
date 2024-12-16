@@ -1,4 +1,4 @@
-package ru.mendeleev.client.servcie;
+package ru.mendeleev.api.servcie;
 
 import ru.mendeleev.api.editClasses.AuthorEdit;
 import ru.mendeleev.api.editClasses.AuthorFilter;

@@ -2,7 +2,7 @@ package ru.mendeleev.client.gui;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.mendeleev.client.servcie.LibraryServerService;
+import ru.mendeleev.api.servcie.LibraryServerService;
 
 import javax.swing.*;
 import java.awt.*;
