@@ -16,6 +16,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
+import static ru.mendeleev.client.utils.ClientUtils.isInteger;
+
 @Component
 public class BookPanel extends JPanel {
 
@@ -228,7 +230,16 @@ public class BookPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            refreshTableData();
+            if (isInteger(filterYearField.getText()) && isInteger(filterPagesField.getText())) {
+                refreshTableData();
+            }
+            else {
+                JOptionPane.showMessageDialog(
+                        BookPanel.this,
+                        "Введены некорректные данные!",
+                        "Внимание",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 }

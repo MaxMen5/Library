@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 import static ru.mendeleev.client.utils.ClientUtils.isBlank;
+import static ru.mendeleev.client.utils.ClientUtils.isInteger;
 import static ru.mendeleev.client.utils.ClientUtils.toStringSafe;
 
 public class EditAuthorDialog extends JDialog {
@@ -168,6 +169,16 @@ public class EditAuthorDialog extends JDialog {
                         JOptionPane.WARNING_MESSAGE);
                 return;
             }
+
+            if (!isInteger(yearField.getText())) {
+                JOptionPane.showMessageDialog(
+                        EditAuthorDialog.this,
+                        "Введены некорректные данные!",
+                        "Внимание",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             Country country = new Country();
             for (int i = 0; i < authorList.getCountry().size(); i++) {
                 if (authorList.getCountry().get(i).getName().equals(countries.getSelectedItem())) {

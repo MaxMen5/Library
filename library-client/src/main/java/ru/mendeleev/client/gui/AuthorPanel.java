@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import static ru.mendeleev.client.utils.ClientUtils.isInteger;
+
 @Component
 public class AuthorPanel extends JPanel {
 
@@ -27,7 +29,7 @@ public class AuthorPanel extends JPanel {
     @Autowired
     private LibraryServerService libraryServerService;
 
-    private AuthorLists authorList = new AuthorLists();
+    private final AuthorLists authorList = new AuthorLists();
 
     private final JTextField filterNameField = new JTextField();
     private final JTextField filterCountryField = new JTextField();
@@ -36,10 +38,6 @@ public class AuthorPanel extends JPanel {
     private JButton addButton;
     private JButton editButton;
     private JButton removeButton;
-
-//    public AuthorPanel() {
-//        createGUI();
-//    }
 
     @PostConstruct
     public void createGUI() {
@@ -239,7 +237,16 @@ public class AuthorPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            refreshTableData();
+            if (isInteger(filterYearField.getText())) {
+                refreshTableData();
+            }
+            else {
+                JOptionPane.showMessageDialog(
+                        AuthorPanel.this,
+                        "Введены некорректные данные!",
+                        "Внимание",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         }
     }
 }

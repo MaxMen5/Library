@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.util.function.Consumer;
 
 import static ru.mendeleev.client.utils.ClientUtils.isBlank;
+import static ru.mendeleev.client.utils.ClientUtils.isInteger;
 import static ru.mendeleev.client.utils.ClientUtils.toStringSafe;
 
 public class EditBookDialog extends JDialog {
@@ -105,6 +106,15 @@ public class EditBookDialog extends JDialog {
                 JOptionPane.showMessageDialog(
                         EditBookDialog.this,
                         "Не все данные введены!",
+                        "Внимание",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!isInteger(yearField.getText()) || !isInteger(pageField.getText())) {
+                JOptionPane.showMessageDialog(
+                        EditBookDialog.this,
+                        "Введены некорректные данные!",
                         "Внимание",
                         JOptionPane.WARNING_MESSAGE);
                 return;

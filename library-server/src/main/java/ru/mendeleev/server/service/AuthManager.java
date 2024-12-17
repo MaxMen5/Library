@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthManager {
 
-    private static final String LOGIN = "1";
-    private static final String PASSWORD = "1";
+    private static final String LOGIN = "login";
+    private static final String PASSWORD = "password";
 
     private boolean loggedIn = false;
 
