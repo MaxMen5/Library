@@ -77,7 +77,7 @@ public class EditAuthorDialog extends JDialog {
         allBookList.setModel(allBookModel);
 
         namePanel.add(new JLabel("Имя:"), BorderLayout.WEST);
-        countryPanel.add(new JLabel("Автор:"), BorderLayout.WEST);
+        countryPanel.add(new JLabel("Страна:"), BorderLayout.WEST);
         yearPanel.add(new JLabel("Год выхода:"), BorderLayout.WEST);
 
         if (prevData != null) {
